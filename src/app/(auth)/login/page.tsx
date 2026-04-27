@@ -56,7 +56,7 @@ function LoginContent() {
       <main className="flex-grow flex items-center justify-center p-6 bg-gray-700">
         <div className="w-full max-w-md bg-white p-10 rounded-3xl shadow-2xl border border-gray-100">
           <div className="mb-10 text-center">
-            <h2 className="text-3xl font-extrabold text-gray-800">Bienvenid@</h2>
+            <h2 className="text-3xl font-extrabold text-gray-800">Bienvenid@ Prueba</h2>
             <p className="text-gray-500 mt-2">Ingresa tus credenciales para continuar</p>
           </div>
 

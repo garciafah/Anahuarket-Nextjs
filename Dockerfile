@@ -5,26 +5,18 @@ WORKDIR /app
 
 COPY package*.json ./
 
+RUN npm install
+
 RUN npm ci
 
 COPY . .
 
+COPY .env.example .env
+COPY prisma ./prisma/
+
 ENV NODE_ENV=local
 ENV PORT=3000
 ENV HOST=0.0.0.0
-
-ARG DB_HOST
-ARG DB_PORT
-ARG DB_USER
-ARG DB_PASSWORD
-ARG DB_NAME
-
-ENV DB_HOST=$DB_HOST
-ENV DB_PORT=$DB_PORT
-ENV DB_USER=$DB_USER
-ENV DB_PASSWORD=$DB_PASSWORD
-ENV DB_NAME=$DB_NAME
-COPY prisma ./prisma/
 
 RUN npx prisma generate
 

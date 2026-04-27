@@ -43,13 +43,6 @@ jobs:
       with:
         context: .
         push: true
-        build-args: |
-          DB_HOST=${{ env.DB_HOST }}
-          DB_PORT=${{ env.DB_PORT }}
-          DB_USER=${{ env.DB_USER }}
-          DB_PASSWORD=${{ env.DB_PASSWORD }}
-          DB_NAME=${{ env.DB_NAME }}
-          DATABASE_URL=${{ env.DATABASE_URL }}
         # Asegúrate de que el nombre del owner (tu usuario) esté en minúsculas
         tags: ghcr.io/garciafah/${{ env.IMAGE_NAME }}:latest
 
@@ -83,7 +76,6 @@ jobs:
           docker stop ${{ env.IMAGE_NAME }} || true
           docker rm ${{ env.IMAGE_NAME }} || true
           
-          # Corre el nuevo contenedor (¡Cambia los puertos -p 80:80 según tu app!)
           docker run -d \
             --name ${{ env.IMAGE_NAME }} \
             --restart unless-stopped \

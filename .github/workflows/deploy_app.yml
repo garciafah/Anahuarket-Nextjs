@@ -51,7 +51,7 @@ jobs:
           DB_NAME=${{ env.DB_NAME }}
           DATABASE_URL=${{ env.DATABASE_URL }}
         # Asegúrate de que el nombre del owner (tu usuario) esté en minúsculas
-        tags: ghcr.io/erickmuosd/${{ env.IMAGE_NAME }}:latest
+        tags: ghcr.io/garciafah/${{ env.IMAGE_NAME }}:latest
 
     # 4. Se conecta al VPS por SSH, descarga la imagen y la corre
     - name: Deploy to VPS
@@ -77,7 +77,7 @@ jobs:
           echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USERNAME" --password-stdin
           
           # Descarga la última versión de la imagen
-          docker pull ghcr.io/erickmuosd/${{ env.IMAGE_NAME }}:latest
+          docker pull ghcr.io/garciafah/${{ env.IMAGE_NAME }}:latest
           
           # Detiene y elimina el contenedor viejo (si existe)
           docker stop ${{ env.IMAGE_NAME }} || true
@@ -95,7 +95,7 @@ jobs:
             -e DB_PASSWORD="$DB_PASSWORD" \
             -e DB_NAME="$DB_NAME" \
             -e DATABASE_URL="$DATABASE_URL" \
-            ghcr.io/erickmuosd/${{ env.IMAGE_NAME }}:latest
+            ghcr.io/garciafah/${{ env.IMAGE_NAME }}:latest
             
           # Limpia imágenes viejas para no llenar el disco de tu VPS
           docker image prune -f

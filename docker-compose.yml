@@ -5,19 +5,19 @@ services:
     build:
       context: .
       args:
-        - DB_HOST=anahuarket-db
-        - DB_PORT=5432
-        - DB_USER=myuser
-        - DB_PASSWORD=ysecretpassword
-        - DB_NAME=mydatabase
+        - DB_HOST=${DB_HOST}
+        - DB_PORT=${DB_PORT}
+        - DB_USER=${DB_USER}
+        - DB_PASSWORD=${DB_PASSWORD}
+        - DB_NAME=${DB_NAME}
     ports:
       - "3000:3000"
     environment:
-      - DB_HOST=anahuarket-db
-      - DB_PORT=5432
-      - DB_USER=myuser
-      - DB_PASSWORD=ysecretpassword
-      - DB_NAME=mydatabase
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
     depends_on:
       - anahuarket-db
 

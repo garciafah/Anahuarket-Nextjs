@@ -1,0 +1,93 @@
+name: CI/CD Pipeline Sandbox a VPS
+
+on:
+  push:
+    branches: [ "sandbox" ] # Se ejecuta al hacer push a la rama main
+
+env:
+  # Cambia 'mi-app' por el nombre de tu contenedor/imagen
+  IMAGE_NAME: anahuarket
+
+jobs:
+
+  build-and-deploy:
+    environment: develop
+    runs-on: ubuntu-latest
+    env:
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    # 1. Descarga tu código
+    - name: Checkout del código
+      uses: actions/checkout@v4
+
+    # 2. Inicia sesión en el registro de contenedores de GitHub (GHCR)
+    - name: Login en GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    # 3. Construye y sube la imagen de Docker a GHCR
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        # Asegúrate de que el nombre del owner (tu usuario) esté en minúsculas
+        tags: ghcr.io/garciafah/${{ env.IMAGE_NAME }}:latest
+
+    # 4. Se conecta al VPS por SSH, descarga la imagen y la corre
+    - name: Deploy to VPS
+      uses: appleboy/ssh-action@v1.0.3
+      env:
+        GHCR_USERNAME: ${{ github.actor }}
+        GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DB_HOST: ${{ env.DB_HOST }}
+        DB_PORT: ${{ env.DB_PORT }}
+        DB_USER: ${{ env.DB_USER }}
+        DB_PASSWORD: ${{ env.DB_PASSWORD }}
+        DB_NAME: ${{ env.DB_NAME }}
+        DATABASE_URL: ${{ env.DATABASE_URL }}
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USERNAME }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        script_stop: true
+
+        envs: GHCR_USERNAME,GHCR_TOKEN,DB_HOST,DB_PORT,DB_USER,DB_PASSWORD,DB_NAME,DATABASE_URL
+        script: |
+          # Inicia sesión en GHCR desde tu VPS
+          echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USERNAME" --password-stdin
+          
+          # Descarga la última versión de la imagen
+          docker pull ghcr.io/garciafah/${{ env.IMAGE_NAME }}:latest
+          
+          # Detiene y elimina el contenedor viejo (si existe)
+          docker stop ${{ env.IMAGE_NAME }} || true
+          docker rm ${{ env.IMAGE_NAME }} || true
+          
+          docker run -d \
+            --name ${{ env.IMAGE_NAME }} \
+            --restart unless-stopped \
+            --network anahuarket-network \
+            -p 443:3000 \
+            -e DB_HOST="$DB_HOST" \
+            -e DB_PORT="$DB_PORT" \
+            -e DB_USER="$DB_USER" \
+            -e DB_PASSWORD="$DB_PASSWORD" \
+            -e DB_NAME="$DB_NAME" \
+            -e DATABASE_URL="$DATABASE_URL" \
+            ghcr.io/garciafah/${{ env.IMAGE_NAME }}:latest
+            
+          # Limpia imágenes viejas para no llenar el disco de tu VPS
+          docker image prune -f

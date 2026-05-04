@@ -1,4 +1,4 @@
-name: CI/CD Pipeline Sandbox a VPS
+name: CI/CD Pipeline-Sandbox a VPS
 
 on:
   push:

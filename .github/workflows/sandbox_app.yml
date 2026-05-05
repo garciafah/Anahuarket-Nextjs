@@ -2,16 +2,16 @@ name: CI/CD Pipeline-Sandbox a VPS
 
 on:
   push:
-    branches: [ "sandbox" ] # Se ejecuta al hacer push a la rama main
-
+    branches: [ "sandbox" ]
 env:
-  # Cambia 'mi-app' por el nombre de tu contenedor/imagen
   IMAGE_NAME: anahuarket
+  IMAGE_TAG: sandbox
+  CONTAINER_NAME: anahuarket-sandbox
 
 jobs:
 
   build-and-deploy:
-    environment: develop
+    environment: environment
     runs-on: ubuntu-latest
     env:
       DB_HOST: ${{ secrets.DB_HOST }}
@@ -44,7 +44,7 @@ jobs:
         context: .
         push: true
         # Asegúrate de que el nombre del owner (tu usuario) esté en minúsculas
-        tags: ghcr.io/garciafah/${{ env.IMAGE_NAME }}:latest
+        tags: ghcr.io/garciafah/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
     # 4. Se conecta al VPS por SSH, descarga la imagen y la corre
     - name: Deploy to VPS
@@ -70,14 +70,14 @@ jobs:
           echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USERNAME" --password-stdin
           
           # Descarga la última versión de la imagen
-          docker pull ghcr.io/garciafah/${{ env.IMAGE_NAME }}:latest
+          docker pull ghcr.io/garciafah/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           
           # Detiene y elimina el contenedor viejo (si existe)
-          docker stop ${{ env.IMAGE_NAME }} || true
-          docker rm ${{ env.IMAGE_NAME }} || true
+          docker stop ${{ env.CONTAINER_NAME }} || true
+          docker rm ${{ env.CONTAINER_NAME }} || true
           
           docker run -d \
-            --name ${{ env.IMAGE_NAME }} \
+            --name ${{ env.CONTAINER_NAME }} \
             --restart unless-stopped \
             --network anahuarket-network \
             -p 443:3000 \
@@ -87,7 +87,7 @@ jobs:
             -e DB_PASSWORD="$DB_PASSWORD" \
             -e DB_NAME="$DB_NAME" \
             -e DATABASE_URL="$DATABASE_URL" \
-            ghcr.io/garciafah/${{ env.IMAGE_NAME }}:latest
+            ghcr.io/garciafah/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
             
           # Limpia imágenes viejas para no llenar el disco de tu VPS
           docker image prune -f

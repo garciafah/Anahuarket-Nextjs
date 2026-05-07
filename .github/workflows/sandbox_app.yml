@@ -20,6 +20,9 @@ jobs:
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       DB_NAME: ${{ secrets.DB_NAME }}
       DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
     permissions:
       contents: read
       packages: write
@@ -58,13 +61,16 @@ jobs:
         DB_PASSWORD: ${{ env.DB_PASSWORD }}
         DB_NAME: ${{ env.DB_NAME }}
         DATABASE_URL: ${{ env.DATABASE_URL }}
+        RESEND_API_KEY: ${{ env.RESEND_API_KEY }}
+        NEXTAUTH_URL: ${{ env.NEXTAUTH_URL }}
+        NEXTAUTH_SECRET: ${{ env.NEXTAUTH_SECRET }}
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
         key: ${{ secrets.VPS_SSH_KEY }}
         script_stop: true
 
-        envs: GHCR_USERNAME,GHCR_TOKEN,DB_HOST,DB_PORT,DB_USER,DB_PASSWORD,DB_NAME,DATABASE_URL
+        envs: GHCR_USERNAME,GHCR_TOKEN,DB_HOST,DB_PORT,DB_USER,DB_PASSWORD,DB_NAME,DATABASE_URL,RESEND_API_KEY,NEXTAUTH_URL,NEXTAUTH_SECRET
         script: |
           # Inicia sesión en GHCR desde tu VPS
           echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USERNAME" --password-stdin
@@ -87,6 +93,9 @@ jobs:
             -e DB_PASSWORD="$DB_PASSWORD" \
             -e DB_NAME="$DB_NAME" \
             -e DATABASE_URL="$DATABASE_URL" \
+            -e RESEND_API_KEY="$RESEND_API_KEY" \
+            -e NEXTAUTH_URL="$NEXTAUTH_URL" \
+            -e NEXTAUTH_SECRET="$NEXTAUTH_SECRET" \
             ghcr.io/garciafah/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
             
           # Limpia imágenes viejas para no llenar el disco de tu VPS

@@ -11,7 +11,6 @@ RUN npm ci
 
 COPY . .
 
-COPY .env.example .env
 COPY prisma ./prisma/
 
 ENV NODE_ENV=local

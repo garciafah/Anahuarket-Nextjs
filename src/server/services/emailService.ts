@@ -6,7 +6,7 @@ export async function sendVerificationEmail(correo: string, token: string) {
 
   await resend.emails.send({
     from: "Anahuarket <onboarding@resend.dev>",
-    to: correo,
+    to: "francisco.garcia02@anahuac.mx",
     subject: "Verifica tu cuenta de Anahuarket",
     html: `
       <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto;">

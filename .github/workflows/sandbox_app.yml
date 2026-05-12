@@ -91,7 +91,7 @@ jobs:
           # Detiene y elimina el contenedor viejo (si existe)
           docker stop ${{ env.CONTAINER_NAME }} || true
           docker rm ${{ env.CONTAINER_NAME }} || true
-          
+
           docker run -d \
             --name ${{ env.CONTAINER_NAME }} \
             --restart unless-stopped \
@@ -111,6 +111,6 @@ jobs:
             -e CLOUDINARY_API_KEY="$CLOUDINARY_API_KEY" \
             -e CLOUDINARY_API_SECRET="$CLOUDINARY_API_SECRET" \
             ghcr.io/garciafah/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-            
+
           # Limpia imágenes viejas para no llenar el disco de tu VPS
           docker image prune -f

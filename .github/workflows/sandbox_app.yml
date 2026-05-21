@@ -56,12 +56,12 @@ jobs:
           NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=${{ secrets.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
     # Notify to dokploy for a new docker image
     - name: Notificar a Dokploy (Trigger Deploy)
-        run: |
-          response=$(curl -s -o /dev/null -w "%{http_code}" -X POST ${{ secrets.DOKPLOY_WEBHOOK_URL }})
-          if [ "$response" -ne 200 ]; then
-            echo " Error al notificar a Dokploy. Código de estado: $response"
-            exit 1
-          fi
+      run: |
+        response=$(curl -s -o /dev/null -w "%{http_code}" -X POST ${{ secrets.DOKPLOY_WEBHOOK_URL }})
+        if [ "$response" -ne 200 ]; then
+          echo " Error al notificar a Dokploy. Código de estado: $response"
+          exit 1
+        fi
           echo " Dokploy notificado con éxito. Despliegue en curso."
 
     # 4. Se conecta al VPS por SSH, descarga la imagen y la corre

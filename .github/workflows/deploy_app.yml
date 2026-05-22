@@ -67,7 +67,7 @@ jobs:
           echo "Error al notificar a Dokploy"
           exit 1
         fi
-          echo "Dokploy notificado con éxito."
+          echo "Dokploy notificado con éxito. Despliegue en curso."
     
     # # 4. Se conecta al VPS por SSH, descarga la imagen y la corre
     # - name: Deploy to VPS

@@ -27,6 +27,8 @@ jobs:
       NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ secrets.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
       CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
       CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SENTRY_ENVIRONMENT: sandbox
     permissions:
       contents: read
       packages: write
@@ -54,63 +56,74 @@ jobs:
         tags: ghcr.io/garciafah/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
         build-args: |
           NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=${{ secrets.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
+          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ENVIRONMENT=sandbox
+    # Notify to dokploy for a new docker image
+    - name: Notificar a Dokploy (Trigger Deploy)
+      run: |
+        response=$(curl -s -o /dev/null -w "%{http_code}" -X POST ${{ secrets.DOKPLOY_WEBHOOK_URL }})
+        if [ "$response" -ne 200 ]; then
+          echo " Error al notificar a Dokploy. Código de estado: $response"
+          exit 1
+        fi
+          echo " Dokploy notificado con éxito. Despliegue en curso."
 
     # 4. Se conecta al VPS por SSH, descarga la imagen y la corre
-    - name: Deploy to VPS
-      uses: appleboy/ssh-action@v1.0.3
-      env:
-        GHCR_USERNAME: ${{ github.actor }}
-        GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        DB_HOST: ${{ env.DB_HOST }}
-        DB_PORT: ${{ env.DB_PORT }}
-        DB_USER: ${{ env.DB_USER }}
-        DB_PASSWORD: ${{ env.DB_PASSWORD }}
-        DB_NAME: ${{ env.DB_NAME }}
-        DATABASE_URL: ${{ env.DATABASE_URL }}
-        AUTH_SECRET: ${{ env.AUTH_SECRET }}
-        AUTH_URL: ${{ env.AUTH_URL }}
-        NEXTAUTH_URL: ${{ env.NEXTAUTH_URL }}
-        RESEND_API_KEY: ${{ env.RESEND_API_KEY }}
-        NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
-        CLOUDINARY_API_KEY: ${{ env.CLOUDINARY_API_KEY }}
-        CLOUDINARY_API_SECRET: ${{ env.CLOUDINARY_API_SECRET }}
-      with:
-        host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.VPS_SSH_KEY }}
-        script_stop: true
+    # - name: Deploy to VPS
+    #   uses: appleboy/ssh-action@v1.0.3
+    #   env:
+    #     GHCR_USERNAME: ${{ github.actor }}
+    #     GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     DB_HOST: ${{ env.DB_HOST }}
+    #     DB_PORT: ${{ env.DB_PORT }}
+    #     DB_USER: ${{ env.DB_USER }}
+    #     DB_PASSWORD: ${{ env.DB_PASSWORD }}
+    #     DB_NAME: ${{ env.DB_NAME }}
+    #     DATABASE_URL: ${{ env.DATABASE_URL }}
+    #     AUTH_SECRET: ${{ env.AUTH_SECRET }}
+    #     AUTH_URL: ${{ env.AUTH_URL }}
+    #     NEXTAUTH_URL: ${{ env.NEXTAUTH_URL }}
+    #     RESEND_API_KEY: ${{ env.RESEND_API_KEY }}
+    #     NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
+    #     CLOUDINARY_API_KEY: ${{ env.CLOUDINARY_API_KEY }}
+    #     CLOUDINARY_API_SECRET: ${{ env.CLOUDINARY_API_SECRET }}
+    #   with:
+    #     host: ${{ secrets.VPS_HOST }}
+    #     username: ${{ secrets.VPS_USERNAME }}
+    #     key: ${{ secrets.VPS_SSH_KEY }}
+    #     script_stop: true
 
-        envs: GHCR_USERNAME,GHCR_TOKEN,DB_HOST,DB_PORT,DB_USER,DB_PASSWORD,DB_NAME,DATABASE_URL,AUTH_SECRET,AUTH_URL,NEXTAUTH_URL,RESEND_API_KEY,NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET
-        script: |
-          # Inicia sesión en GHCR desde tu VPS
-          echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USERNAME" --password-stdin
+    #     envs: GHCR_USERNAME,GHCR_TOKEN,DB_HOST,DB_PORT,DB_USER,DB_PASSWORD,DB_NAME,DATABASE_URL,AUTH_SECRET,AUTH_URL,NEXTAUTH_URL,RESEND_API_KEY,NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET
+    #     script: |
+    #       # Inicia sesión en GHCR desde tu VPS
+    #       echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USERNAME" --password-stdin
           
-          # Descarga la última versión de la imagen
-          docker pull ghcr.io/garciafah/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+    #       # Descarga la última versión de la imagen
+    #       docker pull ghcr.io/garciafah/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           
-          # Detiene y elimina el contenedor viejo (si existe)
-          docker stop ${{ env.CONTAINER_NAME }} || true
-          docker rm ${{ env.CONTAINER_NAME }} || true
+    #       # Detiene y elimina el contenedor viejo (si existe)
+    #       docker stop ${{ env.CONTAINER_NAME }} || true
+    #       docker rm ${{ env.CONTAINER_NAME }} || true
 
-          docker run -d \
-            --name ${{ env.CONTAINER_NAME }} \
-            --restart unless-stopped \
-            --network anahuarket-network \
-            -p 8080:3000 \
-            -e DB_HOST="$DB_HOST" \
-            -e DB_PORT="$DB_PORT" \
-            -e DB_USER="$DB_USER" \
-            -e DB_PASSWORD="$DB_PASSWORD" \
-            -e DB_NAME="$DB_NAME" \
-            -e DATABASE_URL="$DATABASE_URL" \
-            -e AUTH_SECRET="$AUTH_SECRET" \
-            -e AUTH_URL="$AUTH_URL" \
-            -e NEXTAUTH_URL="$NEXTAUTH_URL" \
-            -e RESEND_API_KEY="$RESEND_API_KEY" \
-            -e NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="$NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME" \
-            -e CLOUDINARY_API_KEY="$CLOUDINARY_API_KEY" \
-            -e CLOUDINARY_API_SECRET="$CLOUDINARY_API_SECRET" \
-            ghcr.io/garciafah/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+    #       docker run -d \
+    #         --name ${{ env.CONTAINER_NAME }} \
+    #         --restart unless-stopped \
+    #         --network anahuarket-network \
+    #         -p 8080:3000 \
+    #         -e DB_HOST="$DB_HOST" \
+    #         -e DB_PORT="$DB_PORT" \
+    #         -e DB_USER="$DB_USER" \
+    #         -e DB_PASSWORD="$DB_PASSWORD" \
+    #         -e DB_NAME="$DB_NAME" \
+    #         -e DATABASE_URL="$DATABASE_URL" \
+    #         -e AUTH_SECRET="$AUTH_SECRET" \
+    #         -e AUTH_URL="$AUTH_URL" \
+    #         -e NEXTAUTH_URL="$NEXTAUTH_URL" \
+    #         -e RESEND_API_KEY="$RESEND_API_KEY" \
+    #         -e NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="$NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME" \
+    #         -e CLOUDINARY_API_KEY="$CLOUDINARY_API_KEY" \
+    #         -e CLOUDINARY_API_SECRET="$CLOUDINARY_API_SECRET" \
+    #         ghcr.io/garciafah/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
-          # Limpia imágenes viejas para no llenar el disco de tu VPS
-          docker image prune -f
+    #       # Limpia imágenes viejas para no llenar el disco de tu VPS
+    #       docker image prune -f

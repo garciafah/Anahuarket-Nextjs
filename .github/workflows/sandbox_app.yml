@@ -28,6 +28,7 @@ jobs:
       CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
       CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SENTRY_ENVIRONMENT: sandbox
     permissions:
       contents: read
       packages: write
@@ -56,6 +57,7 @@ jobs:
         build-args: |
           NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=${{ secrets.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ENVIRONMENT=sandbox
     # Notify to dokploy for a new docker image
     - name: Notificar a Dokploy (Trigger Deploy)
       run: |

@@ -29,6 +29,7 @@ jobs:
       CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
       CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SENTRY_ENVIRONMENT: develop
     permissions:
       contents: read
       packages: write
@@ -57,6 +58,7 @@ jobs:
         build-args: |
           NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=${{ secrets.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ENVIRONMENT=develop
 
     # 4. Se conecta al VPS por SSH, descarga la imagen y la corre
     - name: Deploy to VPS

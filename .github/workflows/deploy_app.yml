@@ -39,7 +39,7 @@ jobs:
 
     - run: bella login --api-key ${{ secrets.BELLA_BAXTER_API_KEY }}
 
-    - run: bella run -p my-api -e production -- ./deploy.sh
+    - run: bella run -p anahuarket -e Develop -- ./deploy.sh
     
     - name: Build and push Docker image
       uses: docker/build-push-action@v5

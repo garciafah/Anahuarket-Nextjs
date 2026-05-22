@@ -35,6 +35,7 @@ jobs:
         uses: cosmic-chimps/bella-baxter-setup-action@v0.1.1-preview.88
         with:
           oidc: true
+        env:
           BELLA_BAXTER_TENANT: t
           BELLA_BAXTER_PROJECT: anahuarket
           BELLA_BAXTER_ENV: develop

@@ -35,6 +35,9 @@ jobs:
         uses: cosmic-chimps/bella-baxter-setup-action@v0.1.1-preview.88
         with:
           oidc: true
+          BELLA_BAXTER_TENANT: t
+          BELLA_BAXTER_PROJECT: anahuarket
+          BELLA_BAXTER_ENV: develop
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5

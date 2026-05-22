@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout del código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Login en GitHub Container Registry
         uses: docker/login-action@v3
@@ -36,6 +36,7 @@ jobs:
         with:
           oidc: true
         env:
+          BELLA_BAXTER_DEBUG: '1'
           BELLA_BAXTER_TENANT: t
           BELLA_BAXTER_PROJECT: anahuarket
           BELLA_BAXTER_ENV: develop

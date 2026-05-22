@@ -8,7 +8,6 @@ env:
   IMAGE_NAME: anahuarket
   IMAGE_TAG: develop
   CONTAINER_NAME: anahuarket-develop
-  BELLA_BAXTER_URL: https://console.bella-baxter.io/projects/anahuarket/environments/develop
 
 jobs:
   build-and-deploy:
@@ -32,12 +31,9 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     
-    - name: Setup Bella Baxter
-      uses: cosmic-chimps/bella-baxter-setup-action@v0.1.1-preview.88
-      with:
-        bella-url: ${{ env.BELLA_BAXTER_URL }}
+    # - name: Setup Bella Baxter
+    #   uses: cosmic-chimps/bella-baxter-setup-action@v0.1.1-preview.88
 
-    - run: bella login --api-key ${{ secrets.BELLA_BAXTER_API_KEY }}
 
     
     - name: Build and push Docker image
@@ -48,11 +44,8 @@ jobs:
         # Asegúrate de que el nombre del owner (tu usuario) esté en minúsculas
         tags: ghcr.io/garciafah/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
         build-args: |
-          NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=${{ secrets.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
-          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ENVIRONMENT=develop
+          BELLA_BAXTER_API_KEY=${{ secrets.BELLA_BAXTER_API_KEY }}
 
-    - run: bella run -p Anahuarket -e Develop -- ./deploy.sh
       
     # Notifica a dokploy para que deploye la nueva imagen
     - name: Notificar a Dokploy (Trigger Deploy)

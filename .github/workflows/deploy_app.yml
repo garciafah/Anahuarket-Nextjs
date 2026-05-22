@@ -39,7 +39,6 @@ jobs:
 
     - run: bella login --api-key ${{ secrets.BELLA_BAXTER_API_KEY }}
 
-    - run: bella run -p Anahuarket -e Develop -- ./deploy.sh
     
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
@@ -52,6 +51,8 @@ jobs:
           NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=${{ secrets.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ENVIRONMENT=develop
+
+    - run: bella run -p Anahuarket -e Develop -- ./deploy.sh
       
     # Notifica a dokploy para que deploye la nueva imagen
     - name: Notificar a Dokploy (Trigger Deploy)

@@ -52,12 +52,6 @@ jobs:
           secrets: |
             BELLA_BAXTER_API_KEY=${{ env.BELLA_API_KEY }}
 
-      # Notifica a dokploy para que deploye la nueva imagen
       - name: Notificar a Dokploy (Trigger Deploy)
         run: |
-          response=$(curl -s -o /dev/null -w "%{http_code}" -X POST ${{ secrets.DOKPLOY_WEBHOOK_URL }})
-          if [ "$response" -ne 200 ]; then
-            echo "Error al notificar con Dokploy"
-            exit 1
-          fi
-            echo "Dokploy notificado con éxito. Despliegue en curso."
+              bella run -- ./infra/pipelines_notify_dokploy.sh 

@@ -39,7 +39,7 @@ jobs:
           BELLA_BAXTER_DEBUG: '1'
           BELLA_BAXTER_TENANT: t
           BELLA_BAXTER_PROJECT: anahuarket
-          BELLA_BAXTER_ENV: sandbox
+          BELLA_BAXTER_ENV: sandbox-6560
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5

@@ -53,5 +53,7 @@ jobs:
             BELLA_BAXTER_API_KEY=${{ env.BELLA_API_KEY }}
 
       - name: Notificar a Dokploy (Trigger Deploy)
+        env:
+          BELLA_BAXTER_API_KEY: ${{ env.BELLA_API_KEY }}
         run: |
               bella run -- ./infra/pipelines_notify_dokploy.sh 

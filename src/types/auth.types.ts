@@ -1,6 +1,8 @@
 import z from "zod";
 
-const correoSchema = z.string().email("Correo no válido");
+const correoSchema = process.env.NODE_ENV === "production"
+    ? z.string().email("Correo no válido").endsWith("@anahuac.mx", "Debes usar tu correo institucional @anahuac.mx")
+    : z.string().email("Correo no válido");
 
 export const registerSchema = z.object({
     nombre: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),

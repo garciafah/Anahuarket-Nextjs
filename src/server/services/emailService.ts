@@ -1,12 +1,17 @@
+import { headers } from "next/headers"
 import { Resend } from "resend"
 
 export async function sendVerificationEmail(correo: string, token: string) {
   const resend = new Resend(process.env.RESEND_API_KEY)
-  const verifyUrl = `${process.env.NEXTAUTH_URL}/api/auth/verify?token=${token}`
+  const headersList = await headers()
+  const host = headersList.get("host")
+  const proto = headersList.get("x-forwarded-proto") ?? "http"
+  const baseUrl = `${proto}://${host}`
+  const verifyUrl = `${baseUrl}/api/auth/verify?token=${token}`
 
   await resend.emails.send({
-    from: "Anahuarket <onboarding@anahuarket.cosmic-chimps.com>",
-    to: correo,
+    from: "Anahuarket <onboarding@resend.dev>",
+    to: "francisco.garcia02@anahuac.mx",
     subject: "Verifica tu cuenta de Anahuarket",
     html: `
       <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto;">

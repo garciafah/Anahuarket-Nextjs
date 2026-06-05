@@ -7,7 +7,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 type RegisterFormValues = {
-    name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     tel: string;
     password: string;
@@ -22,9 +23,11 @@ export default function RegisterPage() {
 
     const onSubmitHandler = handleSubmit(async (data) => {
 
+        const fullName = `${data.firstName.trim()} ${data.lastName.trim()}`.trim();
+
 
         const resJSON = await registerUserAction({
-            nombre: data.name,
+            nombre: fullName,
             correo: data.email,
             telefono: data.tel,
             contrasena: data.password
@@ -38,49 +41,87 @@ export default function RegisterPage() {
         router.push(`/verificar-correo?email=${encodeURIComponent(data.email)}`)
     });
 
-    console.log(errors)
-
     return (
-        <div className="min-h-screen flex flex-col bg-slate-50 font-sans">
-            <header className="py-10 bg-[#FF6B00] text-white text-center shadow-lg">
-                <h1 className="text-4xl font-black tracking-tight">ANAHUARKET</h1>
-                <p className="mt-2 text-orange-100 font-medium">REGISTRO</p>
-            </header>
+        <main className="relative min-h-screen overflow-hidden bg-[radial-gradient(1200px_700px_at_20%_-10%,#8580a8_0%,#5c5878_45%,#44405b_100%)] px-4 py-8 sm:px-6 lg:px-12">
+            <div className="pointer-events-none absolute inset-0 opacity-30 [background:radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.22),transparent_38%),radial-gradient(circle_at_80%_70%,rgba(15,23,42,0.35),transparent_44%)]" />
 
-            <main className="flex-grow flex items-center justify-center p-6 bg-gray-700">
-                <div className="w-full max-w-4xl bg-white p-10 rounded-3xl shadow-2xl border border-gray-100">
+            <section className="relative mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-6xl items-center justify-center">
+                <div className="grid w-full overflow-hidden rounded-[28px] border border-white/20 bg-[#231f39]/90 shadow-[0_40px_120px_rgba(10,10,30,0.45)] backdrop-blur lg:grid-cols-[1.03fr_1fr]">
+                    <aside className="relative hidden min-h-[700px] p-6 lg:flex lg:flex-col">
+                        <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-[radial-gradient(130%_90%_at_20%_0%,#6459d9_0%,#2d2757_45%,#14112d_100%)] p-6 text-white">
+                            <div className="absolute -left-16 top-24 h-40 w-72 rotate-6 rounded-full bg-white/10 blur-2xl" />
+                            <div className="absolute bottom-16 right-8 h-56 w-56 rounded-full bg-indigo-300/15 blur-3xl" />
 
-                    <div className="mb-10 text-center">
-                        <h2 className="text-3xl font-extrabold text-gray-800">Bienvenid@ Prueba</h2>
-                        <p className="text-gray-500 mt-2">Ingresa tus credenciales para continuar</p>
-                    </div>
+                            <div className="relative z-10 flex items-center justify-between">
+                                <span className="text-2xl font-bold tracking-[0.2em]">ANU</span>
+                                <Link
+                                    href="/"
+                                    className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold text-white/90 transition hover:bg-white/20"
+                                >
+                                    Volver al sitio
+                                </Link>
+                            </div>
 
-                    <form onSubmit={onSubmitHandler}>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
+                            <div className="relative z-10 mt-auto">
+                                <p className="max-w-xs text-4xl leading-tight font-semibold">
+                                    Captura oportunidades, crea tu presencia en el market
+                                </p>
+                                <div className="mt-8 flex items-center gap-2">
+                                    <span className="h-1.5 w-8 rounded-full bg-white/35" />
+                                    <span className="h-1.5 w-8 rounded-full bg-white/35" />
+                                    <span className="h-1.5 w-8 rounded-full bg-white" />
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
 
-                            <div className="space-y-6">
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Nombre Completo</label>
-                                    <input
-                                        type="text"
-                                        {...register("name", {
-                                            required: {
-                                                value: true,
-                                                message: "El nombre es necesario"
-                                            }
-                                        })}
-                                        placeholder="Francisco García"
-                                        className="w-full px-5 py-4 mb-4 rounded-xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-[#FF6B00] outline-none transition-all text-gray-700"
-                                    />
-                                    {errors.name && (
-                                        <div className="bg-red-50 text-red-600 p-4 rounded-lg text-sm text-center font-semibold border border-red-100">
-                                            {errors.name.message}
-                                        </div>
-                                    )}
+                    <div className="flex min-h-[700px] items-center p-6 sm:p-10 lg:p-12">
+                        <div className="w-full">
+                            <div className="mb-8">
+                                <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">Crea una cuenta</h1>
+                                <p className="mt-3 text-sm text-slate-300">
+                                    ¿Ya tienes cuenta? {" "}
+                                    <Link href="/login" className="font-semibold text-indigo-300 hover:text-indigo-200">
+                                        Inicia sesion
+                                    </Link>
+                                </p>
+                            </div>
+
+                            <form onSubmit={onSubmitHandler} className="space-y-4">
+                                <div className="grid gap-4 sm:grid-cols-2">
+                                    <div>
+                                        <label className="mb-2 block text-sm font-medium text-slate-200">Nombre</label>
+                                        <input
+                                            type="text"
+                                            {...register("firstName", {
+                                                required: {
+                                                    value: true,
+                                                    message: "El nombre es necesario"
+                                                }
+                                            })}
+                                            placeholder="Francisco"
+                                            className="h-12 w-full rounded-xl border border-white/15 bg-white/8 px-4 text-sm text-white placeholder:text-slate-400 outline-none transition focus:border-indigo-300/70 focus:bg-white/12"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="mb-2 block text-sm font-medium text-slate-200">Apellido</label>
+                                        <input
+                                            type="text"
+                                            {...register("lastName", {
+                                                required: {
+                                                    value: true,
+                                                    message: "El apellido es necesario"
+                                                }
+                                            })}
+                                            placeholder="Garcia"
+                                            className="h-12 w-full rounded-xl border border-white/15 bg-white/8 px-4 text-sm text-white placeholder:text-slate-400 outline-none transition focus:border-indigo-300/70 focus:bg-white/12"
+                                        />
+                                    </div>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Correo Institucional</label>
+                                    <label className="mb-2 block text-sm font-medium text-slate-200">Correo institucional</label>
                                     <input
                                         type="email"
                                         {...register("email", {
@@ -90,19 +131,12 @@ export default function RegisterPage() {
                                             }
                                         })}
                                         placeholder="nombre.apellido@anahuac.mx"
-                                        className="w-full px-5 py-4 mb-4 rounded-xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-[#FF6B00] outline-none transition-all text-gray-700"
+                                        className="h-12 w-full rounded-xl border border-white/15 bg-white/8 px-4 text-sm text-white placeholder:text-slate-400 outline-none transition focus:border-indigo-300/70 focus:bg-white/12"
                                     />
-                                    {errors.email && (
-                                        <div className="bg-red-50 text-red-600 p-4 rounded-lg text-sm text-center font-semibold border border-red-100">
-                                            {errors.email.message}
-                                        </div>
-                                    )}
                                 </div>
-                            </div>
 
-                            <div className="space-y-6">
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Teléfono</label>
+                                    <label className="mb-2 block text-sm font-medium text-slate-200">Telefono</label>
                                     <input
                                         type="tel"
                                         {...register("tel", {
@@ -111,108 +145,75 @@ export default function RegisterPage() {
                                                 message: "El telefono es necesario"
                                             }
                                         })}
-                                        placeholder="9988445595"
-                                        className="w-full px-5 py-4 mb-4 rounded-xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-[#FF6B00] outline-none transition-all text-gray-700"
+                                        placeholder="9981234567"
+                                        className="h-12 w-full rounded-xl border border-white/15 bg-white/8 px-4 text-sm text-white placeholder:text-slate-400 outline-none transition focus:border-indigo-300/70 focus:bg-white/12"
                                     />
-                                    {errors.tel && (
-                                        <div className="bg-red-50 text-red-600 p-4 rounded-lg text-sm text-center font-semibold border border-red-100">
-                                            {errors.tel.message}
-                                        </div>
-                                    )}
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Contraseña</label>
+                                    <label className="mb-2 block text-sm font-medium text-slate-200">Contraseña</label>
                                     <input
                                         type="password"
                                         {...register("password", {
                                             required: {
                                                 value: true,
-                                                message: "La contraseña es neceseria"
+                                                message: "La contraseña es necesaria"
                                             }
                                         })}
                                         placeholder="••••••••"
-                                        className="w-full px-5 py-4 mb-4 rounded-xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-[#FF6B00] outline-none transition-all text-gray-700"
+                                        className="h-12 w-full rounded-xl border border-white/15 bg-white/8 px-4 text-sm text-white placeholder:text-slate-400 outline-none transition focus:border-indigo-300/70 focus:bg-white/12"
                                     />
-                                    {errors.password && (
-                                        <div className="bg-red-50 text-red-600 p-4 rounded-lg text-sm text-center font-semibold border border-red-100">
-                                            {errors.password.message}
-                                        </div>
-                                    )}
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Confirmar Contraseña</label>
+                                    <label className="mb-2 block text-sm font-medium text-slate-200">Confirmar contraseña</label>
                                     <input
                                         type="password"
                                         {...register("passwordConfirm", {
                                             required: {
                                                 value: true,
-                                                message: "Se debe de confirmar la contraseña"
+                                                message: "Debes confirmar la contraseña"
                                             },
                                             validate: (
                                                 value,
                                                 formValue) =>
-                                                value === formValue.password || "Las contraseñasno no coinciden"
+                                                value === formValue.password || "Las contraseñas no coinciden"
                                         })}
                                         placeholder="••••••••"
-                                        className="w-full px-5 py-4 mb-4 rounded-xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-[#FF6B00] outline-none transition-all text-gray-700"
+                                        className="h-12 w-full rounded-xl border border-white/15 bg-white/8 px-4 text-sm text-white placeholder:text-slate-400 outline-none transition focus:border-indigo-300/70 focus:bg-white/12"
                                     />
-                                    {errors.passwordConfirm && (
-                                        <div className="bg-red-50 text-red-600 p-4 rounded-lg text-sm text-center font-semibold border border-red-100">
-                                            {errors.passwordConfirm.message}
-                                        </div>
-                                    )}
                                 </div>
-                            </div>
 
-
-                            <div className="md:col-span-2 flex flex-col gap-4 pt-4">
-                                {/** error && (
-                                    <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm text-center font-semibold border border-red-100">
-                                        {error}
+                                {(errors.firstName || errors.lastName || errors.email || errors.tel || errors.password || errors.passwordConfirm || serverError) && (
+                                    <div className="rounded-xl border border-rose-400/30 bg-rose-500/12 p-3 text-sm font-medium text-rose-200">
+                                        {errors.firstName?.message || errors.lastName?.message || errors.email?.message || errors.tel?.message || errors.password?.message || errors.passwordConfirm?.message || serverError}
                                     </div>
-                                )**/}
+                                )}
 
-                                { }
                                 <button
                                     type="submit"
-                                    className="w-full py-4 bg-[#FF6B00] hover:bg-[#e66000] text-white font-black rounded-xl transition-all transform hover:scale-[1.01] shadow-xl text-center"
+                                    className="mt-2 h-12 w-full rounded-xl bg-indigo-500 font-semibold text-white transition hover:bg-indigo-400"
                                 >
-                                    CREAR CUENTA
+                                    Crear cuenta
                                 </button>
 
-                                <div className="relative flex py-2 items-center">
-                                    <div className="flex-grow border-t border-gray-200"></div>
-                                    <span className="flex-shrink mx-4 text-gray-400 text-xs uppercase font-bold">o</span>
-                                    <div className="flex-grow border-t border-gray-200"></div>
+                                <div className="flex items-center gap-4 py-2">
+                                    <div className="h-px flex-1 bg-white/15" />
+                                    <span className="text-xs text-slate-400">o</span>
+                                    <div className="h-px flex-1 bg-white/15" />
                                 </div>
 
                                 <Link
                                     href="/login"
-                                    className="w-full py-4 bg-white border-2 border-gray-200 hover:border-[#FF6B00] text-gray-700 font-bold rounded-xl text-center transition-all"
+                                    className="flex h-12 w-full items-center justify-center rounded-xl border border-white/20 bg-white/5 text-sm font-semibold text-slate-200 transition hover:bg-white/10"
                                 >
-                                    INICIAR SESION
+                                    Iniciar sesion
                                 </Link>
-                            </div>
-
+                            </form>
                         </div>
-                        {serverError && (
-                            <div className="bg-red-50 text-red-600 p-4 mt-4 rounded-lg text-sm text-center font-semibold border border-red-100">
-                                {serverError}
-                            </div>
-                        )}
-                    </form>
-
-
+                    </div>
                 </div>
-            </main>
-
-            <footer className="py-8 text-center bg-[#FF6B00] ">
-                <p className="text-sm font-medium text-white">
-                    © 2026 Anahuarket - Universidad Anáhuac Cancún
-                </p>
-            </footer>
-        </div>
+            </section>
+        </main>
     );
 }

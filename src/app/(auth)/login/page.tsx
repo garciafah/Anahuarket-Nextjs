@@ -51,33 +51,9 @@ function LoginContent() {
       <div className="pointer-events-none absolute inset-0 opacity-30 [background:radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.22),transparent_38%),radial-gradient(circle_at_80%_70%,rgba(15,23,42,0.35),transparent_44%)]" />
 
       <section className="relative mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-6xl items-center justify-center">
-        <div className="grid w-full overflow-hidden rounded-[28px] border border-white/20 bg-[#231f39]/90 shadow-[0_40px_120px_rgba(10,10,30,0.45)] backdrop-blur lg:grid-cols-[1.03fr_1fr]">
-          <aside className="relative hidden min-h-[680px] p-6 lg:flex lg:flex-col">
-            <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-[radial-gradient(130%_90%_at_20%_0%,#6459d9_0%,#2d2757_45%,#14112d_100%)] p-6 text-white">
-              <div className="absolute -left-16 top-24 h-40 w-72 rotate-6 rounded-full bg-white/10 blur-2xl" />
-              <div className="absolute bottom-16 right-8 h-56 w-56 rounded-full bg-indigo-300/15 blur-3xl" />
-
-              <div className="relative z-10 flex items-center justify-between">
-                <span className="text-2xl font-bold tracking-[0.2em]">ANU</span>
-                <Link
-                  href="/"
-                  className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold text-white/90 transition hover:bg-white/20"
-                >
-                  Volver al sitio
-                </Link>
-              </div>
-
-              <div className="relative z-10 mt-auto">
-                <p className="max-w-xs text-4xl leading-tight font-semibold">
-                  Conecta, publica y compra dentro de Anahuarket
-                </p>
-                <div className="mt-8 flex items-center gap-2">
-                  <span className="h-1.5 w-8 rounded-full bg-white/35" />
-                  <span className="h-1.5 w-8 rounded-full bg-white/35" />
-                  <span className="h-1.5 w-8 rounded-full bg-white" />
-                </div>
-              </div>
-            </div>
+        <div className="grid w-full overflow-hidden rounded-[28px] border border-white/20 bg-[#231f39]/90 shadow-[0_40px_120px_rgba(10,10,30,0.45)] backdrop-blur md:grid-cols-[1.03fr_1fr]">
+          <aside className="relative hidden min-h-[680px] p-6 md:flex md:flex-col">
+            <div className="h-full rounded-2xl border border-white/10 bg-[#17142b]" />
           </aside>
 
           <div className="flex min-h-[680px] items-center p-6 sm:p-10 lg:p-12">

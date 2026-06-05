@@ -23,7 +23,7 @@ function VerificarCorreoContent() {
     return (
         <div className="min-h-screen flex flex-col bg-slate-50 font-sans">
             <header className="py-10 bg-[#FF6B00] text-white text-center shadow-lg">
-                <h1 className="text-4xl font-black tracking-tight">ANAHUARKET</h1>
+                <h1 className="text-4xl font-black tracking-tight">CMARKET</h1>
                 <p className="mt-2 text-orange-100 font-medium">VERIFICACIÓN</p>
             </header>
 
@@ -69,7 +69,7 @@ function VerificarCorreoContent() {
             
             <footer className="py-8 text-center bg-[#FF6B00] ">
                 <p className="text-sm font-medium text-white">
-                    © 2026 Anahuarket - Universidad Anáhuac Cancún
+                    © 2026 CMarket - Universidad Anáhuac Cancún
                 </p>
             </footer>
         </div>

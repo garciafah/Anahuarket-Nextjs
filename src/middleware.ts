@@ -6,5 +6,11 @@ const { auth } = NextAuth(authConfig)
 export default auth
 
 export const config = {
-  matcher: ["/((?!api/auth|login|register|verificar-correo|_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    "/",
+    "/agregar-producto",
+    "/editar-perfil/:path*",
+    "/products/:path*",
+    "/profile",
+  ],
 }

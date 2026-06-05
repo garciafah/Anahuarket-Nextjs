@@ -3,8 +3,8 @@ import Providers from "@/components/Providers";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
-  title: "Anahuarket",
-  description: "Marketplace comunitario de Anahuarket",
+  title: "CMarket",
+  description: "Marketplace comunitario de CMarket",
   manifest: "/manifest.json",
   icons: {
     icon: [

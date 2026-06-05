@@ -5,12 +5,12 @@ export async function sendVerificationEmail(correo: string, token: string) {
   const verifyUrl = `${process.env.NEXTAUTH_URL}/api/auth/verify?token=${token}`
 
   await resend.emails.send({
-    from: "Anahuarket <onboarding@anahuarket.cosmic-chimps.com>",
+    from: "CMarket <onboarding@anahuarket.cosmic-chimps.com>",
     to: "correo",
-    subject: "Verifica tu cuenta de Anahuarket",
+    subject: "Verifica tu cuenta de CMarket",
     html: `
       <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto;">
-        <h1 style="color: #FF6B00;">ANAHUARKET</h1>
+        <h1 style="color: #FF6B00;">CMARKET</h1>
         <p>Hola, gracias por registrarte.</p>
         <p>Haz click en el botón para verificar tu cuenta:</p>
         <a href="${verifyUrl}" style="

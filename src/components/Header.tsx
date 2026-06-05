@@ -29,7 +29,7 @@ export default function Header({ nombreUsuario }: Props) {
   return (
     <>
       <header className="bg-[#FF6B00] px-6 py-3 flex items-center justify-between sticky top-0 z-10 shadow-md">
-        <span className="text-white font-black text-xl tracking-tight">ANAHUARKET</span>
+        <span className="text-white font-black text-xl tracking-tight">CMARKET</span>
 
         <div className="hidden md:flex items-center w-96 bg-white rounded-full px-4 py-2 gap-2">
           <Search className="h-4 w-4 text-gray-400" />
